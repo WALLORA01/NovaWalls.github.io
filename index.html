@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Wallpaper Hub</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: #0f172a;
+      color: white;
+    }
+
+    header {
+      text-align: center;
+      padding: 20px;
+      background: #1e293b;
+      font-size: 24px;
+      font-weight: bold;
+    }
+
+    .buttons {
+      text-align: center;
+      margin: 20px;
+    }
+
+    button {
+      padding: 10px 15px;
+      margin: 5px;
+      border: none;
+      cursor: pointer;
+      border-radius: 5px;
+      background: #3b82f6;
+      color: white;
+    }
+
+    .gallery {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 15px;
+      padding: 20px;
+    }
+
+    .card {
+      background: #1e293b;
+      border-radius: 10px;
+      overflow: hidden;
+      position: relative;
+    }
+
+    .card img {
+      width: 100%;
+      display: block;
+    }
+
+    .tag {
+      position: absolute;
+      top: 10px;
+      left: 10px;
+      padding: 5px 8px;
+      font-size: 12px;
+      border-radius: 5px;
+    }
+
+    .free {
+      background: green;
+    }
+
+    .premium {
+      background: crimson;
+    }
+
+    .upload {
+      text-align: center;
+      margin: 20px;
+    }
+
+    input {
+      margin: 10px;
+    }
+  </style>
+</head>
+
+<body>
+
+<header>🌌 Wallpaper Hub</header>
+
+<div class="buttons">
+  <button onclick="filter('all')">All</button>
+  <button onclick="filter('free')">Free</button>
+  <button onclick="filter('premium')">Premium</button>
+</div>
+
+<div class="upload">
+  <input type="file" id="fileInput">
+  <select id="type">
+    <option value="free">Free</option>
+    <option value="premium">Premium</option>
+  </select>
+  <button onclick="uploadWallpaper()">Upload</button>
+</div>
+
+<div class="gallery" id="gallery"></div>
+
+<script>
+  let wallpapers = [];
+
+  function uploadWallpaper() {
+    const file = document.getElementById('fileInput').files[0];
+    const type = document.getElementById('type').value;
+
+    if (!file) {
+      alert("Please select an image");
+      return;
+    }
+
+    const reader = new FileReader();
+
+    reader.onload = function(e) {
+      wallpapers.push({
+        src: e.target.result,
+        type: type
+      });
+
+      displayWallpapers(wallpapers);
+    };
+
+    reader.readAsDataURL(file);
+  }
+
+  function displayWallpapers(list) {
+    const gallery = document.getElementById('gallery');
+    gallery.innerHTML = "";
+
+    list.forEach(w => {
+      gallery.innerHTML += `
+        <div class="card">
+          <img src="${w.src}">
+          <div class="tag ${w.type}">
+            ${w.type.toUpperCase()}
+          </div>
+        </div>
+      `;
+    });
+  }
+
+  function filter(type) {
+    if (type === "all") {
+      displayWallpapers(wallpapers);
+    } else {
+      const filtered = wallpapers.filter(w => w.type === type);
+      displayWallpapers(filtered);
+    }
+  }
+</script>
+
+</body>
+  </html>
